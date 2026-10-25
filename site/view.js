@@ -1,11 +1,10 @@
 // Pure filter/sort over projects.json items.
 
-export function filterProjects(projects, { q = '', platform = '', status = '' }) {
+export function filterProjects(projects, { q = '', platform = '' }) {
   const needle = q.trim().toLowerCase();
   return projects.filter(
     (p) =>
       (!platform || p.platform === platform) &&
-      (!status || p.status === status) &&
       (!needle || `${p.title} ${p.description}`.toLowerCase().includes(needle)),
   );
 }
@@ -20,7 +19,7 @@ const desc = (get) => (a, b) => {
 
 const SORTS = {
   created: desc((p) => p.createdAt),
-  release: desc((p) => (p.release ?? p.testBuild)?.date),
+  release: desc((p) => p.release?.date),
   az: (a, b) => a.title.localeCompare(b.title),
 };
 

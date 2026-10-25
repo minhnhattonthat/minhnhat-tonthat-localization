@@ -44,7 +44,6 @@ img { display: block; }
 .chip { padding: 1px 7px; font: 700 11px/1.5 system-ui, sans-serif; color: #fff; background: #666; }
 .chip--SNES { background: #6a4c93; } .chip--GBA { background: #3a0ca3; } .chip--NDS { background: #5c677d; }
 .chip--PS1 { background: #003791; } .chip--PSP { background: #111; } .chip--Other { background: #666; }
-.chip--released { background: var(--green); color: #000; } .chip--test { background: var(--gold); color: #000; } .chip--progress { background: #888; color: #000; }
 
 .wrap { max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
 .head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 24px; }
@@ -99,8 +98,8 @@ img { display: block; }
   .strip button { flex-basis: 150px; }
   .wrap { padding: 32px 16px; }
   .head h2 { font-size: 28px; }
-  .controls { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
-  .controls input { grid-column: 1 / -1; }
+  .controls { width: 100%; }
+  .controls input { flex: 1; min-width: 0; }
   .controls select { min-width: 0; }
   .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 }

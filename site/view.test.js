@@ -11,7 +11,6 @@ const titles = (a) => a.map((p) => p.title);
 
 test('filter', () => {
   assert.deepEqual(titles(filterProjects(P, { platform: 'SNES' })), ['alpha', 'Gamma']);
-  assert.deepEqual(titles(filterProjects(P, { status: 'test' })), ['Gamma']);
   assert.deepEqual(titles(filterProjects(P, { q: 'GBA' })), ['Beta']);
   assert.deepEqual(filterProjects(P, { q: 'zzz' }), []);
   assert.equal(filterProjects(P, {}).length, 3);
@@ -20,6 +19,6 @@ test('filter', () => {
 test('sort', () => {
   assert.deepEqual(titles(sortProjects(P, 'unknown')), titles(sortProjects(P, 'az'))); // default
   assert.deepEqual(titles(sortProjects(P, 'created')), ['Beta', 'Gamma', 'alpha']);
-  assert.deepEqual(titles(sortProjects(P, 'release')), ['Gamma', 'alpha', 'Beta']);
+  assert.deepEqual(titles(sortProjects(P, 'release')), ['alpha', 'Beta', 'Gamma']);
   assert.deepEqual(titles(sortProjects(P, 'az')), ['alpha', 'Beta', 'Gamma']);
 });

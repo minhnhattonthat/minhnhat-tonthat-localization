@@ -2,7 +2,6 @@
 import { filterProjects, sortProjects } from './view.js';
 
 const $ = (id) => document.getElementById(id);
-const STATUS = { released: 'Released', test: 'Test build', progress: 'In progress' };
 let projects = [];
 let platform = '';
 
@@ -17,7 +16,7 @@ const chip = (kind, text) => el('span', { className: `chip chip--${kind}`, textC
 const placeholder = (p) => el('div', { className: `cover placeholder cover--${p.platform}`, textContent: p.platform });
 
 function card(p) {
-  const build = p.release ?? p.testBuild;
+  const build = p.release;
   const cover = p.cover
     ? el('img', { className: 'cover', src: p.cover, alt: `${p.title} cover`, loading: 'lazy',
         onerror() { this.replaceWith(placeholder(p)); } })
@@ -33,29 +32,27 @@ function card(p) {
     cover,
     el('h3', { textContent: p.title }),
     el('div', { className: 'chips' }, chip(p.platform, p.platform)),
-    el('span', { className: 'status', textContent: [STATUS[p.status], build?.tag,
-      build ? new Date(build.date).toLocaleDateString() : `Updated ${new Date(p.updatedAt).toLocaleDateString()}`].filter(Boolean).join(' · ') }),
+    el('span', { className: 'status', textContent: build ? `${build.tag} · ${new Date(build.date).toLocaleDateString()}` : '' }),
     shots,
     el('div', { className: 'links' },
       p.release && link(p.release.url, `⬇ ${p.release.tag}`),
-      p.testBuild && link(p.testBuild.url, `Test ${p.testBuild.tag}`),
       Object.assign(link(p.issueUrl, '⚠︎', 'report'), { ariaLabel: 'Report issue' })));
 }
 
 // Featured game: newest release first, covers only (the hero needs art).
 function featured() {
-  return sortProjects(projects.filter((p) => p.cover && (p.release || p.testBuild)), 'release').slice(0, 6);
+  return sortProjects(projects.filter((p) => p.cover && p.release), 'release').slice(0, 6);
 }
 
 function showHero(p) {
-  const build = p.release ?? p.testBuild;
+  const build = p.release;
   const bg = el('div', { className: 'bg' });
   bg.style.backgroundImage = `url("${encodeURI(p.cover)}")`;
   $('hero').replaceChildren(bg,
     el('div', { className: 'inner' },
       el('img', { className: 'art', src: p.cover, alt: `${p.title} cover` }),
       el('div', {},
-        el('div', { className: 'chips' }, chip(p.platform, p.platform), chip(p.status, STATUS[p.status])),
+        el('div', { className: 'chips' }, chip(p.platform, p.platform)),
         el('h1', { textContent: p.title }),
         el('p', { textContent: `English patch ${build.tag} · ${new Date(build.date).toLocaleDateString()}` }),
         el('div', { className: 'actions' },
@@ -79,7 +76,7 @@ function renderFeatured() {
 
 function render() {
   const list = sortProjects(
-    filterProjects(projects, { q: $('q').value, platform, status: $('status').value }),
+    filterProjects(projects, { q: $('q').value, platform }),
     $('sort').value,
   );
   $('grid').replaceChildren(...(list.length ? list.map(card) : [el('p', { className: 'empty', textContent: 'No projects match.' })]));
@@ -93,7 +90,7 @@ $('platform').addEventListener('click', (e) => {
   render();
 });
 $('q').addEventListener('input', render);
-for (const id of ['status', 'sort']) $(id).addEventListener('change', render);
+$('sort').addEventListener('change', render);
 
 try {
   const res = await fetch('projects.json');
