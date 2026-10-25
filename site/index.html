@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minh-Nhat Ton-That Localization</title>
+  <meta name="description" content="English fan translations of Japanese retro games">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>▶ Minh-Nhat Ton-That Localization</h1>
+      <p class="intro">English fan translations of Japanese retro games</p>
+    </div>
+    <a class="kofi" href="https://ko-fi.com/minhnhattonthat" target="_blank" rel="noopener"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="36"></a>
+  </header>
+
+  <form class="controls" onsubmit="return false">
+    <label>Search <input type="search" id="q" placeholder="Title…"></label>
+    <label>Platform
+      <select id="platform">
+        <option value="">All</option>
+        <option>SNES</option><option>GBA</option><option>NDS</option><option>PS1</option><option>PSP</option><option>Other</option>
+      </select>
+    </label>
+    <label>Status
+      <select id="status">
+        <option value="">All</option>
+        <option value="released">Released</option>
+        <option value="test">Test build</option>
+        <option value="progress">In progress</option>
+      </select>
+    </label>
+    <label>Sort
+      <select id="sort">
+        <option value="updated">Last updated</option>
+        <option value="created">Newest project</option>
+        <option value="release">Latest release</option>
+        <option value="az">A–Z</option>
+      </select>
+    </label>
+  </form>
+
+  <main id="grid" class="grid" aria-live="polite"></main>
+
+  <footer class="bottom">
+    <p>Enjoying these translations?</p>
+    <a class="kofi" href="https://ko-fi.com/minhnhattonthat" target="_blank" rel="noopener"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="36"></a>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
