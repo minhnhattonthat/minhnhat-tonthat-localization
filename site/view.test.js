@@ -21,4 +21,5 @@ test('sort', () => {
   assert.deepEqual(titles(sortProjects(P, 'created')), ['Beta', 'Gamma', 'alpha']);
   assert.deepEqual(titles(sortProjects(P, 'release')), ['alpha', 'Beta', 'Gamma']);
   assert.deepEqual(titles(sortProjects(P, 'az')), ['alpha', 'Beta', 'Gamma']);
+  assert.deepEqual(titles(sortProjects(P.map((p, i) => ({ ...p, downloads: [5, 20, 9][i] })), 'downloads')), ['alpha', 'Gamma', 'Beta']);
 });

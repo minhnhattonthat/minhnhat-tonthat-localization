@@ -32,7 +32,7 @@ function card(p) {
     cover,
     el('h3', { textContent: p.title }),
     el('div', { className: 'chips' }, chip(p.platform, p.platform)),
-    el('span', { className: 'status', textContent: build ? `${build.tag} · ${new Date(build.date).toLocaleDateString()}` : '' }),
+    el('span', { className: 'status', textContent: [build?.tag, build && new Date(build.date).toLocaleDateString(), p.downloads && `${p.downloads.toLocaleString()} downloads`].filter(Boolean).join(' · ') }),
     shots,
     el('div', { className: 'links' },
       p.release && link(p.release.url, `⬇ ${p.release.tag}`),

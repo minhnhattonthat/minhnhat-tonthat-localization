@@ -30,6 +30,7 @@ export async function buildProject(repo, api) {
     description: repo.description ?? '',
     platform: platform.name,
     ...statusOf(releases),
+    downloads: releases.flatMap((r) => r.assets ?? []).reduce((n, a) => n + a.download_count, 0),
     createdAt: repo.created_at,
     updatedAt: lastHumanCommitDate(commits) ?? repo.pushed_at,
     // tree unknown (GitHub error): link the cover anyway; the page falls back if it 404s
