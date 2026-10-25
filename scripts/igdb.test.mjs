@@ -33,11 +33,10 @@ test('findGame waits and retries when IGDB rate-limits', async () => {
   assert.deepEqual(waits, [1000]);
 });
 
-test('searchAttempts: exact, then any platform, then short title', () => {
-  assert.deepEqual(searchAttempts('Gachasute! Dino Device 2 - Dragon / Phoenix', 24), [
-    { title: 'Gachasute! Dino Device 2 - Dragon / Phoenix', platformId: 24, loose: null },
-    { title: 'Gachasute! Dino Device 2 - Dragon / Phoenix', platformId: null, loose: 'any platform' },
-    { title: 'Gachasute! Dino Device 2', platformId: 24, loose: 'short title' },
+test('searchAttempts: exact, then any platform (no short title: it matched the wrong SMT game)', () => {
+  assert.deepEqual(searchAttempts('Shin Megami Tensei: Devil Children 2 Honoo no Sho / DemiKids Book of Fire', 24), [
+    { title: 'Shin Megami Tensei: Devil Children 2 Honoo no Sho / DemiKids Book of Fire', platformId: 24, loose: null },
+    { title: 'Shin Megami Tensei: Devil Children 2 Honoo no Sho / DemiKids Book of Fire', platformId: null, loose: 'any platform' },
   ]);
   assert.deepEqual(searchAttempts('Kabuki Rocks', 19), [
     { title: 'Kabuki Rocks', platformId: 19, loose: null },

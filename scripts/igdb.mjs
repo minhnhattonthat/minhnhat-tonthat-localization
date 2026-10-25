@@ -9,9 +9,8 @@ export function buildGameQuery(title, platformId) {
 export function searchAttempts(title, platformId) {
   const out = [{ title, platformId, loose: null }];
   if (!platformId) return out;
+  // Many Japanese-only SNES games sit under IGDB's "Super Famicom" platform, not SNES.
   out.push({ title, platformId: null, loose: 'any platform' });
-  const short = title.split(/: | - | \/ /)[0];
-  if (short !== title) out.push({ title: short, platformId, loose: 'short title' });
   return out;
 }
 
