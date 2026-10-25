@@ -1,5 +1,5 @@
 {
-  "name": "minhnhat-tonthat-localization",
+  "name": "mtl",
   "private": true,
   "type": "module",
   "scripts": { "test": "node --test" }
