@@ -87,6 +87,8 @@ img { display: block; }
 
 .bottom { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: center; padding: 24px; background: #1a1a1a; color: var(--muted); text-align: center; }
 .bottom p { margin: 0; }
+.bottom .counter { flex-basis: 100%; font-size: 12px; }
+.bottom .counter img { vertical-align: middle; }
 .bottom .small { flex-basis: 100%; font-size: 11px; }
 
 @media (max-width: 640px) {
