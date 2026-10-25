@@ -3,50 +3,65 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Minh-Nhat Ton-That Localization</title>
+  <title>MTL · Minh-Nhat Ton-That Localization</title>
   <meta name="description" content="English fan translations of Japanese retro games">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="top">
-    <div>
-      <h1>▶ Minh-Nhat Ton-That Localization</h1>
-      <p class="intro">English fan translations of Japanese retro games</p>
-    </div>
-    <a class="kofi" href="https://ko-fi.com/minhnhattonthat" target="_blank" rel="noopener"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="36"></a>
+  <div class="topline"></div>
+  <header class="nav">
+    <a class="logo" href="./">MTL<small>Minh-Nhat Ton-That Localization</small></a>
+    <nav class="links-top">
+      <a href="#games">Games</a>
+      <a href="https://github.com/minhnhattonthat" target="_blank" rel="noopener">GitHub</a>
+      <a class="kofi" href="https://ko-fi.com/minhnhattonthat" target="_blank" rel="noopener">Ko-fi</a>
+    </nav>
   </header>
 
-  <form class="controls" onsubmit="return false">
-    <label>Search <input type="search" id="q" placeholder="Title…"></label>
-    <label>Platform
-      <select id="platform">
-        <option value="">All</option>
-        <option>SNES</option><option>GBA</option><option>NDS</option><option>PS1</option><option>PSP</option><option>Other</option>
-      </select>
-    </label>
-    <label>Status
-      <select id="status">
-        <option value="">All</option>
-        <option value="released">Released</option>
-        <option value="test">Test build</option>
-        <option value="progress">In progress</option>
-      </select>
-    </label>
-    <label>Sort
-      <select id="sort">
-        <option value="updated">Last updated</option>
-        <option value="created">Newest project</option>
-        <option value="release">Latest release</option>
-        <option value="az">A–Z</option>
-      </select>
-    </label>
-  </form>
+  <section class="hero" id="hero" aria-label="Featured"></section>
+  <nav class="strip" id="strip" aria-label="Latest projects"></nav>
 
-  <main id="grid" class="grid" aria-live="polite"></main>
+  <main class="wrap" id="games">
+    <div class="head"><h2>GAMES</h2><span>タイトル一覧</span></div>
+    <p class="intro">English fan translations of Japanese retro games.</p>
+
+    <div class="pills" id="platform" role="group" aria-label="Platform">
+      <button type="button" value="" aria-pressed="true">All</button>
+      <button type="button" value="SNES" aria-pressed="false">SNES</button>
+      <button type="button" value="GBA" aria-pressed="false">GBA</button>
+      <button type="button" value="NDS" aria-pressed="false">NDS</button>
+      <button type="button" value="PS1" aria-pressed="false">PS1</button>
+      <button type="button" value="PSP" aria-pressed="false">PSP</button>
+      <button type="button" value="Other" aria-pressed="false">Other</button>
+    </div>
+
+    <form class="controls" onsubmit="return false">
+      <label>Search <input type="search" id="q" placeholder="Title…"></label>
+      <label>Status
+        <select id="status">
+          <option value="">All</option>
+          <option value="released">Released</option>
+          <option value="test">Test build</option>
+          <option value="progress">In progress</option>
+        </select>
+      </label>
+      <label>Sort
+        <select id="sort">
+          <option value="updated">Last updated</option>
+          <option value="created">Newest project</option>
+          <option value="release">Latest release</option>
+          <option value="az">A–Z</option>
+        </select>
+      </label>
+    </form>
+
+    <div id="grid" class="grid" aria-live="polite"></div>
+  </main>
 
   <footer class="bottom">
     <p>Enjoying these translations?</p>
-    <a class="kofi" href="https://ko-fi.com/minhnhattonthat" target="_blank" rel="noopener"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="36"></a>
+    <a class="kofi-btn" href="https://ko-fi.com/minhnhattonthat" target="_blank" rel="noopener"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="30"></a>
+    <p class="small">MTL · Minh-Nhat Ton-That Localization. Games and cover art belong to their owners.</p>
   </footer>
 
   <script type="module" src="app.js"></script>
