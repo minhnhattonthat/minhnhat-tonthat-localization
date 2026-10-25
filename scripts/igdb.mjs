@@ -5,6 +5,16 @@ export function buildGameQuery(title, platformId) {
   return `search "${title.replace(/"/g, '\\"')}"; fields name,first_release_date,cover.image_id;${where} limit 5;`;
 }
 
+// Looser fallbacks for titles IGDB doesn't find as-is; loose matches are flagged for review.
+export function searchAttempts(title, platformId) {
+  const out = [{ title, platformId, loose: null }];
+  if (!platformId) return out;
+  out.push({ title, platformId: null, loose: 'any platform' });
+  const short = title.split(/: | - | \/ /)[0];
+  if (short !== title) out.push({ title: short, platformId, loose: 'short title' });
+  return out;
+}
+
 export function coverUrl(imageId) {
   return `https://images.igdb.com/igdb/image/upload/t_cover_big/${imageId}.jpg`;
 }

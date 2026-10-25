@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildGameQuery, coverUrl, findGame } from './igdb.mjs';
+import { buildGameQuery, coverUrl, findGame, searchAttempts } from './igdb.mjs';
 
 test('buildGameQuery escapes quotes and filters platform', () => {
   assert.equal(buildGameQuery('Say "Hi"', 19),
@@ -31,4 +31,17 @@ test('findGame waits and retries when IGDB rate-limits', async () => {
   const game = await findGame('Granbo', 24, { clientId: 'c', token: 't' }, async () => replies.shift(), async (ms) => waits.push(ms));
   assert.equal(game.name, 'Granbo');
   assert.deepEqual(waits, [1000]);
+});
+
+test('searchAttempts: exact, then any platform, then short title', () => {
+  assert.deepEqual(searchAttempts('Gachasute! Dino Device 2 - Dragon / Phoenix', 24), [
+    { title: 'Gachasute! Dino Device 2 - Dragon / Phoenix', platformId: 24, loose: null },
+    { title: 'Gachasute! Dino Device 2 - Dragon / Phoenix', platformId: null, loose: 'any platform' },
+    { title: 'Gachasute! Dino Device 2', platformId: 24, loose: 'short title' },
+  ]);
+  assert.deepEqual(searchAttempts('Kabuki Rocks', 19), [
+    { title: 'Kabuki Rocks', platformId: 19, loose: null },
+    { title: 'Kabuki Rocks', platformId: null, loose: 'any platform' },
+  ]);
+  assert.deepEqual(searchAttempts('Granbo', null), [{ title: 'Granbo', platformId: null, loose: null }]);
 });

@@ -3,7 +3,7 @@
 import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { OWNER, BOT_NAME, isProject, parseTitle, platformOf, statusOf, scanTree, lastHumanCommitDate, listAllPages } from './lib.mjs';
-import { getToken, findGame, coverUrl } from './igdb.mjs';
+import { getToken, findGame, coverUrl, searchAttempts } from './igdb.mjs';
 
 const API = 'https://api.github.com';
 
@@ -57,10 +57,15 @@ export async function addCovers(projects, gh, commit) {
   summary(`### IGDB covers (${commit ? 'committing' : 'dry run'})\n\n| repo | title | match | cover |\n|---|---|---|---|`);
   for (const p of missing) {
     await attempt(async () => {
-      const game = await findGame(p.title, p.igdbPlatform, { clientId, token });
+      let game, loose;
+      for (const a of searchAttempts(p.title, p.igdbPlatform)) {
+        game = await findGame(a.title, a.platformId, { clientId, token });
+        if (game) { loose = a.loose; break; }
+      }
       if (!game) return summary(`| ${p.repo} | ${p.title} | no match | |`);
       const url = coverUrl(game.imageId);
-      summary(`| ${p.repo} | ${p.title} | ${game.name} (${game.year ?? '?'}) igdb ${game.id} | [cover](${url}) |`);
+      const flag = loose ? ` **(loose: ${loose})**` : '';
+      summary(`| ${p.repo} | ${p.title} | ${game.name} (${game.year ?? '?'}) igdb ${game.id}${flag} | [cover](${url}) |`);
       if (!commit) return;
       const img = await fetch(url);
       if (!img.ok) throw new Error(`cover download ${img.status}`);
