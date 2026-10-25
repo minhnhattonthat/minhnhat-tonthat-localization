@@ -25,5 +25,5 @@ const SORTS = {
 };
 
 export function sortProjects(projects, key) {
-  return [...projects].sort(SORTS[key] ?? SORTS.release);
+  return [...projects].sort(SORTS[key] ?? SORTS.az);
 }

@@ -18,7 +18,7 @@ test('filter', () => {
 });
 
 test('sort', () => {
-  assert.deepEqual(titles(sortProjects(P, 'unknown')), titles(sortProjects(P, 'release'))); // default
+  assert.deepEqual(titles(sortProjects(P, 'unknown')), titles(sortProjects(P, 'az'))); // default
   assert.deepEqual(titles(sortProjects(P, 'created')), ['Beta', 'Gamma', 'alpha']);
   assert.deepEqual(titles(sortProjects(P, 'release')), ['Gamma', 'alpha', 'Beta']);
   assert.deepEqual(titles(sortProjects(P, 'az')), ['alpha', 'Beta', 'Gamma']);
