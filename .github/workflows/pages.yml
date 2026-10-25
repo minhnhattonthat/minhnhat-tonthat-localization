@@ -45,6 +45,13 @@ jobs:
         run: gh api -X PUT repos/${{ github.repository }}/actions/workflows/pages.yml/enable
         env:
           GH_TOKEN: ${{ github.token }}
+      # Pages caches each file for 10 min; versioned URLs stop a new page loading an old script.
+      - name: Cache-bust assets
+        run: |
+          v=${GITHUB_SHA::7}
+          sed -i "s/style\.css\"/style.css?v=$v\"/; s/app\.js\"/app.js?v=$v\"/" site/index.html
+          sed -i "s#'./view.js'#'./view.js?v=$v'#" site/app.js
+          grep -q "app.js?v=$v" site/index.html && grep -q "view.js?v=$v" site/app.js
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
