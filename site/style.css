@@ -22,7 +22,6 @@ img { display: block; }
 .logo small { display: block; margin-top: 4px; font: 500 10px/1 system-ui, sans-serif; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); -webkit-text-fill-color: var(--muted); }
 .links-top { display: flex; gap: 24px; font-size: 14px; font-weight: 700; }
 .links-top a { color: var(--text); text-decoration: none; }
-.links-top a::before { content: '★ '; color: var(--gold); }
 .links-top a:hover { color: var(--gold); }
 
 /* Featured game: blurred cover behind, cover + text in front */
@@ -90,7 +89,6 @@ img { display: block; }
   .nav { padding: 10px 16px; }
   .logo small { font-size: 8px; letter-spacing: .15em; }
   .links-top { gap: 12px; }
-  .links-top a::before { content: none; }
   .hero .inner { flex-direction: column; text-align: center; padding: 24px 16px; gap: 16px; }
   .hero .art { width: 160px; }
   .hero h1 { font-size: 24px; }
