@@ -7,6 +7,8 @@ test('buildGameQuery escapes quotes and filters platform', () => {
     'search "Say \\"Hi\\""; fields name,first_release_date,cover.image_id; where platforms = (19); limit 5;');
   assert.equal(buildGameQuery('Granbo', null),
     'search "Granbo"; fields name,first_release_date,cover.image_id; limit 5;');
+  assert.equal(buildGameQuery('A\\B', null),
+    'search "A\\\\B"; fields name,first_release_date,cover.image_id; limit 5;');
 });
 
 test('coverUrl', () => {

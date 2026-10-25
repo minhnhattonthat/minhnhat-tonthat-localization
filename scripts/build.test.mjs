@@ -22,11 +22,17 @@ test('buildProject assembles a full project', async () => {
   assert.equal(p.needsCover, false);
 });
 
+test('buildProject encodes # and ? in screenshot names', async () => {
+  const none = async () => [];
+  const p = await buildProject(repo, { tree: async () => ['docs/screenshots/a#1?.png'], releases: none, commits: none });
+  assert.deepEqual(p.screenshots, [raw + 'docs/screenshots/a%231%3F.png']);
+});
+
 test('buildProject survives failing sub-calls', async () => {
   const boom = async () => { throw new Error('404'); };
   const p = await buildProject(repo, { tree: boom, releases: boom, commits: boom });
   assert.equal(p.status, 'progress');
-  assert.equal(p.cover, null);
+  assert.equal(p.cover, raw + 'docs/cover.jpg'); // kept; the page falls back if it 404s
   assert.deepEqual(p.screenshots, []);
   assert.equal(p.issueUrl, 'https://github.com/minhnhattonthat/kabuki-rocks/issues/new');
   assert.equal(p.updatedAt, '2026-10-25T00:00:00Z'); // falls back to pushed_at

@@ -13,10 +13,13 @@ function el(tag, props = {}, ...children) {
 
 const link = (href, text, className) => el('a', { href, textContent: text, className, target: '_blank', rel: 'noopener' });
 
+const placeholder = (p) => el('div', { className: `cover placeholder cover--${p.platform}`, textContent: p.platform });
+
 function card(p) {
   const cover = p.cover
-    ? el('img', { className: 'cover', src: p.cover, alt: `${p.title} cover`, loading: 'lazy' })
-    : el('div', { className: `cover placeholder cover--${p.platform}`, textContent: p.platform });
+    ? el('img', { className: 'cover', src: p.cover, alt: `${p.title} cover`, loading: 'lazy',
+        onerror() { this.replaceWith(placeholder(p)); } })
+    : placeholder(p);
 
   const shots = p.screenshots.length
     ? el('div', { className: 'shots' }, ...p.screenshots.map((s, i) =>

@@ -20,7 +20,7 @@ export function isProject(repo) {
 }
 
 export function parseTitle(description, name) {
-  const m = description?.match(/translation(?: patch)? (?:of|for) (.+?) \([^)]*\)/);
+  const m = description?.match(/translation(?: patch)? (?:of|for) (.+) \([^)]*\)/); // to the last bracket
   if (m) return m[1];
   return name
     .replace(/-(en|english)$/i, '')

@@ -22,7 +22,7 @@ export async function buildProject(repo, api) {
   const commits = await attempt(() => api.commits(repo), [], `${repo.name} commits`);
   const tree = scanTree(paths ?? []);
   const platform = platformOf(repo.topics);
-  const raw = (p) => `https://raw.githubusercontent.com/${OWNER}/${repo.name}/${repo.default_branch}/${encodeURI(p)}`;
+  const raw = (p) => `https://raw.githubusercontent.com/${OWNER}/${repo.name}/${repo.default_branch}/${p.split('/').map(encodeURIComponent).join('/')}`;
   const repoUrl = `https://github.com/${OWNER}/${repo.name}`;
   return {
     repo: repo.name,
@@ -32,7 +32,8 @@ export async function buildProject(repo, api) {
     ...statusOf(releases),
     createdAt: repo.created_at,
     updatedAt: lastHumanCommitDate(commits) ?? repo.pushed_at,
-    cover: tree.hasCover ? raw('docs/cover.jpg') : null,
+    // tree unknown (GitHub error): link the cover anyway; the page falls back if it 404s
+    cover: tree.hasCover || paths === null ? raw('docs/cover.jpg') : null,
     screenshots: tree.screenshots.map(raw),
     repoUrl,
     issueUrl: `${repoUrl}/issues/new${tree.hasBugForm ? '?template=bug.yml' : ''}`,
@@ -41,6 +42,8 @@ export async function buildProject(repo, api) {
     coverRaw: raw('docs/cover.jpg'),
   };
 }
+
+const cell = (s) => String(s).replaceAll('|', '\\|');
 
 function summary(line) {
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, line + '\n');
@@ -62,10 +65,10 @@ export async function addCovers(projects, gh, commit) {
         game = await findGame(a.title, a.platformId, { clientId, token });
         if (game) { loose = a.loose; break; }
       }
-      if (!game) return summary(`| ${p.repo} | ${p.title} | no match | |`);
+      if (!game) return summary(`| ${p.repo} | ${cell(p.title)} | no match | |`);
       const url = coverUrl(game.imageId);
       const flag = loose ? ` **(loose: ${loose})**` : '';
-      summary(`| ${p.repo} | ${p.title} | ${game.name} (${game.year ?? '?'}) igdb ${game.id}${flag} | [cover](${url}) |`);
+      summary(`| ${p.repo} | ${cell(p.title)} | ${cell(game.name)} (${game.year ?? '?'}) igdb ${game.id}${flag} | [cover](${url}) |`);
       if (!commit) return;
       const img = await fetch(url);
       if (!img.ok) throw new Error(`cover download ${img.status}`);

@@ -37,6 +37,8 @@ Add these under the repo's Settings → Secrets and variables → Actions:
 
 Without the Twitch secrets the cover step is skipped and the site still builds.
 
+Pages must deploy from Actions: Settings → Pages → Build and deployment → Source: **GitHub Actions**.
+
 ## Local preview
 
 ```bash

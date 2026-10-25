@@ -2,7 +2,7 @@
 
 export function buildGameQuery(title, platformId) {
   const where = platformId ? ` where platforms = (${platformId});` : '';
-  return `search "${title.replace(/"/g, '\\"')}"; fields name,first_release_date,cover.image_id;${where} limit 5;`;
+  return `search "${title.replace(/[\\"]/g, '\\$&')}"; fields name,first_release_date,cover.image_id;${where} limit 5;`;
 }
 
 // Looser fallbacks for titles IGDB doesn't find as-is; loose matches are flagged for review.

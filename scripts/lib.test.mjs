@@ -19,6 +19,7 @@ test('parseTitle from real descriptions', () => {
     ['Unofficial English translation patch for Black/Matrix 00 (PlayStation), with the tools that built it', 'Black/Matrix 00'],
     ['English fan translation of Hanjuku Hero: Ah, Sekai yo Hanjuku Nare...!! (SNES, 1992, Square)', 'Hanjuku Hero: Ah, Sekai yo Hanjuku Nare...!!'],
     ['English fan translation of Velldeselba Senki - Tsubasa no Kunshou (PSX)', 'Velldeselba Senki - Tsubasa no Kunshou'],
+    ['English translation of Foo (Remix) (SNES)', 'Foo (Remix)'],
   ];
   for (const [d, t] of cases) assert.equal(parseTitle(d, 'x'), t);
 });
