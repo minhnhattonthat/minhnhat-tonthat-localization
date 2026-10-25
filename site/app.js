@@ -13,6 +13,7 @@ function el(tag, props = {}, ...children) {
 
 const link = (href, text, className) => el('a', { href, textContent: text, className, target: '_blank', rel: 'noopener' });
 const chip = (kind, text) => el('span', { className: `chip chip--${kind}`, textContent: text });
+const compact = new Intl.NumberFormat('en', { notation: 'compact' }); // 1234 → 1.2K
 const placeholder = (p) => el('div', { className: `cover placeholder cover--${p.platform}`, textContent: p.platform });
 
 function card(p) {
@@ -32,7 +33,8 @@ function card(p) {
     cover,
     el('h3', { textContent: p.title }),
     el('div', { className: 'chips' }, chip(p.platform, p.platform)),
-    el('span', { className: 'status', textContent: [build?.tag, build && new Date(build.date).toLocaleDateString(), p.downloads && `${p.downloads.toLocaleString()} downloads`].filter(Boolean).join(' · ') }),
+    el('span', { className: 'status', title: p.downloads ? `${p.downloads.toLocaleString()} downloads` : '',
+      textContent: [build && new Date(build.date).toLocaleDateString(), p.downloads && `${compact.format(p.downloads)} dl`].filter(Boolean).join(' · ') }),
     shots,
     el('div', { className: 'links' },
       p.release && link(p.release.url, `⬇ ${p.release.tag}`),
