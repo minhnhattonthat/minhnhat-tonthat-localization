@@ -44,6 +44,7 @@ test('matchScore prefers the right game and rejects other games in the series', 
   assert.equal(matchScore('Eithéa', { name: 'Eithéa' }), 1);
   assert.ok(matchScore('Hanjuku Hero: Ah, Sekai yo Hanjuku Nare...!!',
     { name: 'Hanjuku Hero: Aa Sekai yo Hanjuku Nare', alternative_names: [{ name: 'Hanjuku Hero: Aa Sekai yo Hanjuku Nare...!!' }] }) >= MIN_SCORE);
+  assert.ok(matchScore('Gachasute! Dino Device 2 - Dragon / Phoenix', { name: 'Phoenix 2' }) < MIN_SCORE);
   assert.ok(matchScore('Erementar Gerad: Tozasareshi Uta', { name: 'Erementar Gerad: Matoe, Suifu no Ken' }) < MIN_SCORE);
 });
 

@@ -36,8 +36,8 @@ export function matchScore(title, game) {
   }));
 }
 
-// Below this a short variant has matched a different game (e.g. a DS sequel for a GBA title).
-export const MIN_SCORE = 0.5;
+// Below this a short variant has matched a different game (e.g. "Phoenix 2" for "Dino Device 2 - Dragon / Phoenix").
+export const MIN_SCORE = 0.6;
 
 export function coverUrl(imageId) {
   return `https://images.igdb.com/igdb/image/upload/t_cover_big/${imageId}.jpg`;
