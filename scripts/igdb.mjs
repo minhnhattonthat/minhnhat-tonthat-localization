@@ -16,12 +16,20 @@ export async function getToken(clientId, clientSecret, fetchFn = fetch) {
   return (await res.json()).access_token;
 }
 
-export async function findGame(title, platformId, { clientId, token }, fetchFn = fetch) {
-  const res = await fetchFn('https://api.igdb.com/v4/games', {
-    method: 'POST',
-    headers: { 'Client-ID': clientId, Authorization: `Bearer ${token}` },
-    body: buildGameQuery(title, platformId),
-  });
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// IGDB allows 4 requests/second; on 429 wait and retry (up to 3 tries).
+export async function findGame(title, platformId, { clientId, token }, fetchFn = fetch, wait = sleep) {
+  let res;
+  for (let tries = 0; tries < 3; tries++) {
+    res = await fetchFn('https://api.igdb.com/v4/games', {
+      method: 'POST',
+      headers: { 'Client-ID': clientId, Authorization: `Bearer ${token}` },
+      body: buildGameQuery(title, platformId),
+    });
+    if (res.status !== 429) break;
+    await wait(1000);
+  }
   if (!res.ok) throw new Error(`IGDB ${res.status}`);
   const game = (await res.json()).find((g) => g.cover?.image_id);
   if (!game) return null;

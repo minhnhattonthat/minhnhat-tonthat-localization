@@ -24,3 +24,11 @@ test('findGame picks first result with cover', async () => {
     { id: 2, name: 'Kabuki Rocks', year: 1994, imageId: 'co9' });
   assert.equal(await findGame('x', 19, { clientId: 'cid', token: 'tok' }, async () => ({ ok: true, json: async () => [] })), null);
 });
+
+test('findGame waits and retries when IGDB rate-limits', async () => {
+  const replies = [{ ok: false, status: 429 }, { ok: true, json: async () => [{ id: 3, name: 'Granbo', cover: { image_id: 'co3' } }] }];
+  const waits = [];
+  const game = await findGame('Granbo', 24, { clientId: 'c', token: 't' }, async () => replies.shift(), async (ms) => waits.push(ms));
+  assert.equal(game.name, 'Granbo');
+  assert.deepEqual(waits, [1000]);
+});

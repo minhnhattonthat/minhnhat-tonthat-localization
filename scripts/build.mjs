@@ -44,7 +44,7 @@ export async function buildProject(repo, api) {
 
 function summary(line) {
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, line + '\n');
-  else console.log(line);
+  console.log(line); // also in the log: job summaries can't be read back via the API
 }
 
 export async function addCovers(projects, gh, commit) {
