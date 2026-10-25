@@ -39,7 +39,7 @@ function card(p) {
     meta('Downloads', p.downloads.toLocaleString('ja-JP')),
     shots,
     el('div', { className: 'links' },
-      p.release && link(p.release.url, `⬇ ${p.release.tag}`),
+      p.release && link(p.release.url, `⬇ ${p.release.tag}`, 'dl'),
       Object.assign(link(p.issueUrl, '⚠︎', 'report'), { ariaLabel: 'Report issue' })));
 }
 
