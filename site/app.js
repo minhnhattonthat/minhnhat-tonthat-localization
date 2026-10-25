@@ -37,8 +37,7 @@ function card(p) {
     el('div', { className: 'links' },
       p.release && link(p.release.url, `⬇ ${p.release.tag}`),
       p.testBuild && link(p.testBuild.url, `Test ${p.testBuild.tag}`),
-      link(p.issueUrl, 'Report issue', 'report'),
-      link(p.repoUrl, 'Repo')));
+      Object.assign(link(p.issueUrl, '⚠︎', 'report'), { ariaLabel: 'Report issue' })));
 }
 
 // Featured game: newest release first, covers only (the hero needs art).
