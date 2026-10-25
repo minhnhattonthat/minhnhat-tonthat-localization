@@ -19,12 +19,11 @@ const desc = (get) => (a, b) => {
 };
 
 const SORTS = {
-  updated: desc((p) => p.updatedAt),
   created: desc((p) => p.createdAt),
   release: desc((p) => (p.release ?? p.testBuild)?.date),
   az: (a, b) => a.title.localeCompare(b.title),
 };
 
 export function sortProjects(projects, key) {
-  return [...projects].sort(SORTS[key] ?? SORTS.updated);
+  return [...projects].sort(SORTS[key] ?? SORTS.release);
 }
