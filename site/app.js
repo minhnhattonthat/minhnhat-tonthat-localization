@@ -15,7 +15,7 @@ const link = (href, text, className) => el('a', { href, textContent: text, class
 const chip = (kind, text) => el('span', { className: `chip chip--${kind}`, textContent: text });
 // Japanese store style (DLsite): small label, full value; dates as 2026/10/23.
 const jaDate = (d) => new Date(d).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
-const meta = (label, title, value) => el('div', { className: 'meta' }, el('span', { className: 'label', textContent: label, title }), value);
+const meta = (label, value) => el('div', { className: 'meta' }, el('span', { className: 'label', textContent: label }), value);
 const placeholder = (p) => el('div', { className: `cover placeholder cover--${p.platform}`, textContent: p.platform });
 
 function card(p) {
@@ -35,8 +35,8 @@ function card(p) {
     cover,
     el('h3', { textContent: p.title }),
     el('div', { className: 'chips' }, chip(p.platform, p.platform)),
-    build && meta('配信日', 'Release date', jaDate(build.date)),
-    meta('DL数', 'Downloads', p.downloads.toLocaleString('ja-JP')),
+    build && meta('Release', jaDate(build.date)),
+    meta('Downloads', p.downloads.toLocaleString('ja-JP')),
     shots,
     el('div', { className: 'links' },
       p.release && link(p.release.url, `⬇ ${p.release.tag}`),
