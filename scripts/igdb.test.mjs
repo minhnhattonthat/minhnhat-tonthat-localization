@@ -44,3 +44,8 @@ test('searchAttempts: exact, then any platform (no short title: it matched the w
   ]);
   assert.deepEqual(searchAttempts('Granbo', null), [{ title: 'Granbo', platformId: null, loose: null }]);
 });
+
+test('buildGameQuery accepts several platforms (SNES + Super Famicom)', () => {
+  assert.equal(buildGameQuery('Kabuki Rocks', [19, 58]),
+    'search "Kabuki Rocks"; fields name,first_release_date,cover.image_id; where platforms = (19,58); limit 5;');
+});

@@ -30,7 +30,7 @@ test('parseTitle falls back to humanized name', () => {
 });
 
 test('platformOf', () => {
-  assert.deepEqual(platformOf(['fan-translation', 'snes']), { name: 'SNES', igdbId: 19 });
+  assert.deepEqual(platformOf(['fan-translation', 'snes']), { name: 'SNES', igdbId: [19, 58] });
   assert.deepEqual(platformOf(['gba']), { name: 'GBA', igdbId: 24 });
   assert.deepEqual(platformOf(['nds']), { name: 'NDS', igdbId: 20 });
   assert.deepEqual(platformOf(['psx']), { name: 'PS1', igdbId: 7 });

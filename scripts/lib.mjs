@@ -5,7 +5,7 @@ export const EXCLUDE = ['translate-retro-game', 'fan-translation-template'];
 export const BOT_NAME = 'cover-bot';
 
 export const PLATFORMS = {
-  snes: { name: 'SNES', igdbId: 19 },
+  snes: { name: 'SNES', igdbId: [19, 58] }, // IGDB files Japan-only releases under Super Famicom (58)
   gba: { name: 'GBA', igdbId: 24 },
   nds: { name: 'NDS', igdbId: 20 },
   psx: { name: 'PS1', igdbId: 7 },
