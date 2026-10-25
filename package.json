@@ -1,0 +1,6 @@
+{
+  "name": "minhnhat-tonthat-localization",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test" }
+}
