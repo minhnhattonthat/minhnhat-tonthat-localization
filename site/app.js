@@ -13,7 +13,9 @@ function el(tag, props = {}, ...children) {
 
 const link = (href, text, className) => el('a', { href, textContent: text, className, target: '_blank', rel: 'noopener' });
 const chip = (kind, text) => el('span', { className: `chip chip--${kind}`, textContent: text });
-const compact = new Intl.NumberFormat('en', { notation: 'compact' }); // 1234 → 1.2K
+// Japanese store style (DLsite): small label, full value; dates as 2026/10/23.
+const jaDate = (d) => new Date(d).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+const meta = (label, title, value) => el('div', { className: 'meta' }, el('span', { className: 'label', textContent: label, title }), value);
 const placeholder = (p) => el('div', { className: `cover placeholder cover--${p.platform}`, textContent: p.platform });
 
 function card(p) {
@@ -33,8 +35,8 @@ function card(p) {
     cover,
     el('h3', { textContent: p.title }),
     el('div', { className: 'chips' }, chip(p.platform, p.platform)),
-    el('span', { className: 'status', title: p.downloads ? `${p.downloads.toLocaleString()} downloads` : '',
-      textContent: [build && new Date(build.date).toLocaleDateString(), p.downloads && `${compact.format(p.downloads)} dl`].filter(Boolean).join(' · ') }),
+    build && meta('配信日', 'Release date', jaDate(build.date)),
+    meta('DL数', 'Downloads', p.downloads.toLocaleString('ja-JP')),
     shots,
     el('div', { className: 'links' },
       p.release && link(p.release.url, `⬇ ${p.release.tag}`),
@@ -56,7 +58,7 @@ function showHero(p) {
       el('div', {},
         el('div', { className: 'chips' }, chip(p.platform, p.platform)),
         el('h1', { textContent: p.title }),
-        el('p', { textContent: `English patch ${build.tag} · ${new Date(build.date).toLocaleDateString()}` }),
+        el('p', { textContent: `English patch ${build.tag} · ${jaDate(build.date)}` }),
         el('div', { className: 'actions' },
           link(build.url, '⬇ Download', 'btn'),
           link(p.repoUrl, 'Project page', 'btn ghost')))));
