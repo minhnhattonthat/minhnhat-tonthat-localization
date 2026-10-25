@@ -17,6 +17,7 @@ const chip = (kind, text) => el('span', { className: `chip chip--${kind}`, textC
 const placeholder = (p) => el('div', { className: `cover placeholder cover--${p.platform}`, textContent: p.platform });
 
 function card(p) {
+  const build = p.release ?? p.testBuild;
   const cover = p.cover
     ? el('img', { className: 'cover', src: p.cover, alt: `${p.title} cover`, loading: 'lazy',
         onerror() { this.replaceWith(placeholder(p)); } })
@@ -32,7 +33,8 @@ function card(p) {
     cover,
     el('h3', { textContent: p.title }),
     el('div', { className: 'chips' }, chip(p.platform, p.platform)),
-    el('span', { className: 'status', textContent: [STATUS[p.status], (p.release ?? p.testBuild)?.tag, `Updated ${new Date(p.updatedAt).toLocaleDateString()}`].filter(Boolean).join(' · ') }),
+    el('span', { className: 'status', textContent: [STATUS[p.status], build?.tag,
+      build ? new Date(build.date).toLocaleDateString() : `Updated ${new Date(p.updatedAt).toLocaleDateString()}`].filter(Boolean).join(' · ') }),
     shots,
     el('div', { className: 'links' },
       p.release && link(p.release.url, `⬇ ${p.release.tag}`),
