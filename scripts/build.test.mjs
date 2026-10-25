@@ -32,3 +32,18 @@ test('buildProject survives failing sub-calls', async () => {
   assert.equal(p.updatedAt, '2026-10-25T00:00:00Z'); // falls back to pushed_at
   assert.equal(p.needsCover, false); // tree unknown → don't try to commit
 });
+
+test('addCovers skips covers when the IGDB login fails', async () => {
+  const { addCovers } = await import('./build.mjs');
+  const realFetch = globalThis.fetch;
+  process.env.TWITCH_CLIENT_ID = 'cid';
+  process.env.TWITCH_CLIENT_SECRET = 'bad';
+  globalThis.fetch = async () => ({ ok: false, status: 401 });
+  try {
+    await addCovers([{ repo: 'x', title: 'X', needsCover: true, igdbPlatform: 19 }], async () => {}, false);
+  } finally {
+    globalThis.fetch = realFetch;
+    delete process.env.TWITCH_CLIENT_ID;
+    delete process.env.TWITCH_CLIENT_SECRET;
+  }
+});

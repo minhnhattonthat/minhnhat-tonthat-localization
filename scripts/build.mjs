@@ -47,12 +47,13 @@ function summary(line) {
   else console.log(line);
 }
 
-async function addCovers(projects, gh, commit) {
+export async function addCovers(projects, gh, commit) {
   const { TWITCH_CLIENT_ID: clientId, TWITCH_CLIENT_SECRET: secret } = process.env;
   const missing = projects.filter((p) => p.needsCover);
   if (!missing.length) return;
   if (!clientId || !secret) return console.warn('IGDB secrets not set; skipping covers');
-  const token = await getToken(clientId, secret);
+  const token = await attempt(() => getToken(clientId, secret), null, 'IGDB token');
+  if (!token) return;
   summary(`### IGDB covers (${commit ? 'committing' : 'dry run'})\n\n| repo | title | match | cover |\n|---|---|---|---|`);
   for (const p of missing) {
     await attempt(async () => {
