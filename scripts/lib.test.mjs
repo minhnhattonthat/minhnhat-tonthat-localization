@@ -29,6 +29,7 @@ test('parseTitle falls back to humanized name', () => {
   assert.equal(parseTitle(null, 'dragon-knight-4-en'), 'Dragon Knight 4');
   assert.equal(parseTitle('', 'yu-yu-hakusho-2-english'), 'Yu Yu Hakusho 2');
   assert.equal(parseTitle('Some unrelated text', 'granbo'), 'Granbo');
+  assert.equal(parseTitle('English fan translation of farland-story-2-en (SNES)', 'farland-story-2-en'), 'Farland Story 2');
 });
 
 test('platformOf', () => {

@@ -21,7 +21,7 @@ export function isProject(repo) {
 
 export function parseTitle(description, name) {
   const m = description?.match(/translation(?: patch)? (?:of|for) (.+) \([^)]*\)/); // to the last bracket
-  if (m) return m[1];
+  if (m && m[1] !== name) return m[1]; // repo name = unfilled template placeholder
   return name
     .replace(/-(en|english)$/i, '')
     .split('-')
