@@ -41,6 +41,7 @@ export async function buildProject(repo, api) {
     needsCover: paths !== null && !tree.hasCover,
     igdbPlatform: platform.igdbId,
     coverRaw: raw('docs/cover.jpg'),
+    private: repo.private,
   };
 }
 
@@ -94,7 +95,9 @@ export async function main() {
     if (!res.ok) throw new Error(`${opts.method ?? 'GET'} ${path} → ${res.status}`);
     return res.json();
   };
-  const repos = (await listAllPages(gh, `${API}/users/${OWNER}/repos?per_page=100&type=owner`)).filter(isProject);
+  // /user/repos includes private repos but needs the PAT; GITHUB_TOKEN can only list public ones
+  const list = process.env.REPO_WRITE_TOKEN ? `${API}/user/repos?per_page=100&affiliation=owner` : `${API}/users/${OWNER}/repos?per_page=100&type=owner`;
+  const repos = (await listAllPages(gh, list)).filter(isProject);
   const api = {
     tree: async (r) => (await gh(`/repos/${OWNER}/${r.name}/git/trees/${r.default_branch}?recursive=1`)).tree.map((t) => t.path),
     releases: (r) => gh(`/repos/${OWNER}/${r.name}/releases?per_page=30`),
@@ -102,8 +105,10 @@ export async function main() {
   };
   const projects = await Promise.all(repos.map((r) => buildProject(r, api)));
   await addCovers(projects, gh, process.env.COMMIT_COVERS === 'true');
+  // private repos get covers but stay off the public site
   const out = projects
-    .map(({ needsCover, igdbPlatform, coverRaw, ...p }) => p)
+    .filter((p) => !p.private)
+    .map(({ needsCover, igdbPlatform, coverRaw, private: _, ...p }) => p)
     .sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
   mkdirSync('site', { recursive: true });
   writeFileSync('site/projects.json', JSON.stringify(out, null, 2));

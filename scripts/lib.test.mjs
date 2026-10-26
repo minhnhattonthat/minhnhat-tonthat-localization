@@ -7,6 +7,7 @@ test('isProject', () => {
   assert.equal(isProject(r()), true);
   assert.equal(isProject(r({ topics: ['snes'] })), false);
   assert.equal(isProject(r({ fork: true })), false);
+  assert.equal(isProject(r({ private: true })), true); // cover bot scans private repos too
   assert.equal(isProject(r({ name: 'translate-retro-game' })), false);
   assert.equal(isProject(r({ name: 'fan-translation-template' })), false);
 });

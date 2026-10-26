@@ -16,7 +16,7 @@ export const PLATFORMS = {
 const IMAGE = /\.(png|jpe?g|gif|webp)$/i;
 
 export function isProject(repo) {
-  return !repo.fork && !repo.private && (repo.topics ?? []).includes('fan-translation') && !EXCLUDE.includes(repo.name);
+  return !repo.fork && (repo.topics ?? []).includes('fan-translation') && !EXCLUDE.includes(repo.name);
 }
 
 export function parseTitle(description, name) {
