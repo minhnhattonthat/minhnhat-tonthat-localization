@@ -43,9 +43,9 @@ function card(p) {
       Object.assign(link(p.issueUrl, '⚠︎', 'report'), { ariaLabel: 'Report issue' })));
 }
 
-// Featured game: newest release first, covers only (the hero needs art).
+// Featured game: newest project first, covers only (the hero needs art).
 function featured() {
-  return sortProjects(projects.filter((p) => p.cover && p.release), 'release').slice(0, 6);
+  return sortProjects(projects.filter((p) => p.cover), 'created').slice(0, 6);
 }
 
 function showHero(p) {
@@ -58,9 +58,9 @@ function showHero(p) {
       el('div', {},
         el('div', { className: 'chips' }, chip(p.platform, p.platform)),
         el('h1', { textContent: p.title }),
-        el('p', { textContent: `English patch ${build.tag} · ${jaDate(build.date)}` }),
+        el('p', { textContent: build ? `English patch ${build.tag} · ${jaDate(build.date)}` : p.description }),
         el('div', { className: 'actions' },
-          link(build.url, '⬇ Download', 'btn'),
+          build && link(build.url, '⬇ Download', 'btn'),
           link(p.repoUrl, 'Project page', 'btn ghost')))));
   for (const b of $('strip').children) b.setAttribute('aria-current', b.dataset.repo === p.repo);
 }
