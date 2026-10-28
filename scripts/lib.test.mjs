@@ -44,14 +44,15 @@ test('platformOf', () => {
 
 test('statusOf', () => {
   const rel = (tag, date, prerelease = false, draft = false) => ({ tag_name: tag, html_url: 'u/' + tag, published_at: date, prerelease, draft });
-  assert.deepEqual(statusOf([]), { status: 'progress', release: null, testBuild: null });
+  assert.deepEqual(statusOf([]), { status: 'progress', release: null, testBuild: null, firstReleaseAt: null });
   assert.deepEqual(statusOf([rel('v0.1', '2026-01-01', true)]),
-    { status: 'test', release: null, testBuild: { tag: 'v0.1', url: 'u/v0.1', date: '2026-01-01' } });
+    { status: 'test', release: null, testBuild: { tag: 'v0.1', url: 'u/v0.1', date: '2026-01-01' }, firstReleaseAt: '2026-01-01' });
   // released with a newer pre-release → both
   const s = statusOf([rel('v1.1-test2', '2026-10-24', true), rel('v1.0', '2026-10-10')]);
   assert.equal(s.status, 'released');
   assert.equal(s.release.tag, 'v1.0');
   assert.equal(s.testBuild.tag, 'v1.1-test2');
+  assert.equal(s.firstReleaseAt, '2026-10-10');
   // pre-release older than release → no testBuild; drafts ignored
   const o = statusOf([rel('v2', '2026-05-01'), rel('v2-rc', '2026-04-01', true), rel('v3', '2026-06-01', false, true)]);
   assert.equal(o.release.tag, 'v2');

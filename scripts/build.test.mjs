@@ -26,13 +26,13 @@ test('buildProject assembles a full project', async () => {
 
 test('buildProject encodes # and ? in screenshot names', async () => {
   const none = async () => [];
-  const p = await buildProject(repo, { tree: async () => ['docs/screenshots/a#1?.png'], releases: none, commits: none, events: none });
+  const p = await buildProject(repo, { tree: async () => ['docs/screenshots/a#1?.png'], releases: none, commits: none });
   assert.deepEqual(p.screenshots, [raw + 'docs/screenshots/a%231%3F.png']);
 });
 
 test('buildProject survives failing sub-calls', async () => {
   const boom = async () => { throw new Error('404'); };
-  const p = await buildProject(repo, { tree: boom, releases: boom, commits: boom, events: boom });
+  const p = await buildProject(repo, { tree: boom, releases: boom, commits: boom });
   assert.equal(p.status, 'progress');
   assert.equal(p.downloads, 0);
   assert.equal(p.cover, raw + 'docs/cover.jpg'); // kept; the page falls back if it 404s
@@ -40,15 +40,6 @@ test('buildProject survives failing sub-calls', async () => {
   assert.equal(p.issueUrl, 'https://github.com/minhnhattonthat/kabuki-rocks/issues/new');
   assert.equal(p.updatedAt, '2026-10-25T00:00:00Z'); // falls back to pushed_at
   assert.equal(p.needsCover, false); // tree unknown → don't try to commit
-});
-
-test('buildProject publicAt: carried forward, else PublicEvent, else created_at', async () => {
-  const none = async () => [];
-  const api = { tree: none, releases: none, commits: none, events: async () => [{ type: 'PushEvent', created_at: 'x' }, { type: 'PublicEvent', created_at: '2026-10-20T00:00:00Z' }] };
-  assert.equal((await buildProject(repo, api)).publicAt, '2026-10-20T00:00:00Z');
-  assert.equal((await buildProject(repo, api, { publicAt: '2026-01-01' })).publicAt, '2026-01-01');
-  assert.equal((await buildProject(repo, { ...api, events: none })).publicAt, '2026-09-01T00:00:00Z');
-  assert.equal((await buildProject({ ...repo, private: true }, api)).publicAt, null);
 });
 
 test('addCovers skips covers when the IGDB login fails', async () => {

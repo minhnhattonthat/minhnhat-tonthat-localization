@@ -6,7 +6,6 @@ import { OWNER, BOT_NAME, isProject, parseTitle, platformOf, statusOf, scanTree,
 import { getToken, findGame, coverUrl } from './igdb.mjs';
 
 const API = 'https://api.github.com';
-const PAGES_JSON = 'https://minhnhattonthat.github.io/mtl/projects.json';
 
 async function attempt(fn, fallback, label) {
   try {
@@ -17,16 +16,7 @@ async function attempt(fn, fallback, label) {
   }
 }
 
-// publicAt: when the repo went public. PublicEvent only lives ~90 days, so the date is carried
-// forward from the deployed projects.json (prev); repos never private fall back to created_at.
-async function publicAt(repo, api, prev) {
-  if (repo.private) return null;
-  if (prev?.publicAt) return prev.publicAt;
-  const events = await attempt(() => api.events(repo), [], `${repo.name} events`);
-  return events.find((e) => e.type === 'PublicEvent')?.created_at ?? repo.created_at;
-}
-
-export async function buildProject(repo, api, prev) {
+export async function buildProject(repo, api) {
   const paths = await attempt(() => api.tree(repo), null, `${repo.name} tree`);
   const releases = await attempt(() => api.releases(repo), [], `${repo.name} releases`);
   const commits = await attempt(() => api.commits(repo), [], `${repo.name} commits`);
@@ -42,7 +32,6 @@ export async function buildProject(repo, api, prev) {
     ...statusOf(releases),
     downloads: releases.flatMap((r) => r.assets ?? []).reduce((n, a) => n + a.download_count, 0),
     createdAt: repo.created_at,
-    publicAt: await publicAt(repo, api, prev),
     updatedAt: lastHumanCommitDate(commits) ?? repo.pushed_at,
     // tree unknown (GitHub error): link the cover anyway; the page falls back if it 404s
     cover: tree.hasCover || paths === null ? raw('docs/cover.jpg') : null,
@@ -113,15 +102,8 @@ export async function main() {
     tree: async (r) => (await gh(`/repos/${OWNER}/${r.name}/git/trees/${r.default_branch}?recursive=1`)).tree.map((t) => t.path),
     releases: (r) => gh(`/repos/${OWNER}/${r.name}/releases?per_page=30`),
     commits: (r) => gh(`/repos/${OWNER}/${r.name}/commits?per_page=20`),
-    events: (r) => listAllPages(gh, `/repos/${OWNER}/${r.name}/events?per_page=100`),
   };
-  const deployed = await attempt(async () => {
-    const res = await fetch(PAGES_JSON);
-    if (!res.ok) throw new Error(`${res.status}`);
-    return res.json();
-  }, [], 'deployed projects.json');
-  const prev = new Map(deployed.map((p) => [p.repo, p]));
-  const projects = await Promise.all(repos.map((r) => buildProject(r, api, prev.get(r.name))));
+  const projects = await Promise.all(repos.map((r) => buildProject(r, api)));
   await addCovers(projects, gh, process.env.COMMIT_COVERS === 'true');
   // private repos get covers but stay off the public site
   const out = projects

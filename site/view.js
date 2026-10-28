@@ -18,7 +18,7 @@ const desc = (get) => (a, b) => {
 };
 
 const SORTS = {
-  created: desc((p) => p.publicAt ?? p.createdAt),
+  created: desc((p) => p.firstReleaseAt),
   release: desc((p) => p.release?.date),
   az: (a, b) => a.title.localeCompare(b.title),
   downloads: (a, b) => (b.downloads ?? 0) - (a.downloads ?? 0),

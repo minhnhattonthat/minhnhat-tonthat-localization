@@ -45,6 +45,7 @@ export function statusOf(releases) {
     status: release ? 'released' : pre ? 'test' : 'progress',
     release: pick(release) ?? null,
     testBuild: pick(pre) ?? null,
+    firstReleaseAt: list.at(-1)?.published_at ?? null, // test builds count
   };
 }
 
