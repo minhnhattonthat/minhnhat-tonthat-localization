@@ -2,8 +2,8 @@
 // Dry run unless COMMIT_COVERS=true: matches are only written to the job summary.
 import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { OWNER, BOT_NAME, isProject, parseTitle, platformOf, statusOf, scanTree, lastHumanCommitDate, listAllPages } from './lib.mjs';
-import { getToken, findGame, coverUrl } from './igdb.mjs';
+import { OWNER, BOT_NAME, IGDB_IDS, isProject, parseTitle, platformOf, statusOf, scanTree, lastHumanCommitDate, listAllPages } from './lib.mjs';
+import { getToken, findGame, findGameById, coverUrl } from './igdb.mjs';
 
 const API = 'https://api.github.com';
 
@@ -62,7 +62,8 @@ export async function addCovers(projects, gh, commit) {
   summary(`### IGDB covers (${commit ? 'committing' : 'dry run'})\n\n| repo | title | match | cover |\n|---|---|---|---|`);
   for (const p of missing) {
     await attempt(async () => {
-      const game = await findGame(p.title, p.igdbPlatform, { clientId, token });
+      const auth = { clientId, token };
+      const game = IGDB_IDS[p.repo] ? await findGameById(IGDB_IDS[p.repo], auth) : await findGame(p.title, p.igdbPlatform, auth);
       if (!game) return summary(`| ${p.repo} | ${cell(p.title)} | no match | |`);
       const url = coverUrl(game.imageId);
       const flag = game.loose ? ` **(loose: ${game.loose})**` : '';

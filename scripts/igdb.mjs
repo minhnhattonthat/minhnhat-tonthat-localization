@@ -81,8 +81,18 @@ export async function findGame(title, platformId, auth, fetchFn = fetch, wait = 
     }
     const [game, score] = [...pool.values()].map((g) => [g, matchScore(title, g)]).reduce((a, b) => (b[1] > a[1] ? b : a), [null, MIN_SCORE - 1e-9]);
     if (!game) continue;
-    const year = game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : null;
-    return { id: game.id, name: game.name, year, imageId: game.cover.image_id, score: Math.round(score * 100) / 100, loose: plat === platformId ? null : 'any platform' };
+    return result(game, Math.round(score * 100) / 100, plat === platformId ? null : 'any platform');
   }
   return null;
+}
+
+// Exact game by IGDB id (manual override); null if it has no cover.
+export async function findGameById(id, auth, fetchFn = fetch, wait = sleep) {
+  const [game] = await query(`where id = ${Number(id)}; ${FIELDS} limit 1;`, auth, fetchFn, wait);
+  return game?.cover?.image_id ? result(game, 'override', null) : null;
+}
+
+function result(game, score, loose) {
+  const year = game.first_release_date ? new Date(game.first_release_date * 1000).getUTCFullYear() : null;
+  return { id: game.id, name: game.name, year, imageId: game.cover.image_id, score, loose };
 }

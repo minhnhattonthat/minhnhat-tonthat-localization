@@ -3,6 +3,8 @@
 export const OWNER = 'minhnhattonthat';
 export const EXCLUDE = ['translate-retro-game', 'fan-translation-template'];
 export const BOT_NAME = 'cover-bot';
+// repo → IGDB game id, for titles the search can't match (e.g. "Gaiamaster" vs "Gaia Master")
+export const IGDB_IDS = { 'gaiamaster-kamigami-no-board-game-en': 59153 };
 
 export const PLATFORMS = {
   snes: { name: 'SNES', igdbId: [19, 58] }, // IGDB files Japan-only releases under Super Famicom (58)

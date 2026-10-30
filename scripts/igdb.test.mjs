@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildGameQuery, buildSlugQuery, coverUrl, findGame, matchScore, slugify, titleVariants, MIN_SCORE } from './igdb.mjs';
+import { findGameById, buildGameQuery, buildSlugQuery, coverUrl, findGame, matchScore, slugify, titleVariants, MIN_SCORE } from './igdb.mjs';
 
 const F = 'fields name,first_release_date,cover.image_id,alternative_names.name;';
 
@@ -82,6 +82,12 @@ test('findGame waits and retries when IGDB rate-limits', async () => {
   const game = await findGame('Granbo', 24, auth, async () => replies.shift() ?? reply([]), async (ms) => waits.push(ms));
   assert.equal(game.name, 'Granbo');
   assert.equal(waits[0], 1000);
+});
+
+test('findGameById fetches the exact game, null without cover', async () => {
+  const fake = async (url, { body }) => (assert.equal(body.startsWith('where id = 59153;'), true), reply([{ id: 59153, name: 'Gaia Master', first_release_date: 956188800, cover: { image_id: 'cogm' } }]));
+  assert.deepEqual(await findGameById(59153, auth, fake, noWait), { id: 59153, name: 'Gaia Master', year: 2000, imageId: 'cogm', score: 'override', loose: null });
+  assert.equal(await findGameById(1, auth, async () => reply([{ id: 1, name: 'X' }]), noWait), null);
 });
 
 test('coverUrl', () => {
