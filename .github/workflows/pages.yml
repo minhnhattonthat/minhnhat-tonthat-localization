@@ -9,7 +9,7 @@ on:
     inputs:
       commit:
         type: boolean
-        default: false
+        default: true
         description: 'Commit IGDB covers into project repos'
 
 permissions:
@@ -37,7 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
           TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
-          COMMIT_COVERS: ${{ inputs.commit == true && 'true' || 'false' }}
+          COMMIT_COVERS: ${{ (github.event_name != 'workflow_dispatch' || inputs.commit) && 'true' || 'false' }}
       # GitHub disables scheduled workflows after 60 days without repo activity; re-enabling resets that timer.
       - name: Keep schedule alive
         if: github.event_name == 'schedule'
