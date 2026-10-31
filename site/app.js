@@ -98,7 +98,7 @@ $('q').addEventListener('input', render);
 $('sort').addEventListener('change', render);
 
 try {
-  const res = await fetch('projects.json');
+  const res = await fetch('projects.json', { cache: 'no-cache' }); // Pages sends max-age=600; revalidate so rebuilds show at once
   if (!res.ok) throw new Error(res.status);
   projects = await res.json();
   renderFeatured();
