@@ -49,7 +49,7 @@ img { display: block; }
 .head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 24px; }
 .head h2 { margin: 0; font-size: 40px; font-weight: 900; line-height: 1; letter-spacing: .02em; }
 .head span { color: var(--muted); font-size: 13px; letter-spacing: .2em; }
-#count { margin-left: auto; letter-spacing: .05em; }
+#count { margin-left: auto; letter-spacing: .05em; font-variant-numeric: tabular-nums; }
 
 .toolbar { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .pills { display: flex; gap: 6px; flex-wrap: wrap; }

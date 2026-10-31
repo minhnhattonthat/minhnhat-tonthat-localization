@@ -83,7 +83,7 @@ function render() {
     filterProjects(projects, { q: $('q').value, platform }),
     $('sort').value,
   );
-  $('count').textContent = `${list.length} / ${projects.length} titles`;
+  $('count').textContent = `【 ${list.length} / ${projects.length} TITLES 】`;
   $('grid').replaceChildren(...(list.length ? list.map(card) : [el('p', { className: 'empty', textContent: 'No projects match.' })]));
 }
 
