@@ -106,3 +106,15 @@ try {
 } catch {
   $('grid').replaceChildren(el('p', { className: 'empty', textContent: "Couldn't load projects." }));
 }
+
+try {
+  const res = await fetch('supporters.json');
+  if (!res.ok) throw new Error(res.status);
+  const list = await res.json();
+  if (list.length) {
+    $('supporters').querySelector('ul').replaceChildren(...list.map((s) => el('li', {},
+      s.avatar && el('img', { src: s.avatar, alt: '', loading: 'lazy', width: 28, height: 28 }),
+      el('span', { textContent: s.name }))));
+    $('supporters').hidden = false;
+  }
+} catch {} // no supporters list: footer stays as is

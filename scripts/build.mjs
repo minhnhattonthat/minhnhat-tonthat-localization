@@ -2,10 +2,11 @@
 // Dry run unless COMMIT_COVERS=true: matches are only written to the job summary.
 import { appendFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { OWNER, BOT_NAME, IGDB_IDS, isProject, parseTitle, platformOf, statusOf, scanTree, lastHumanCommitDate, listAllPages } from './lib.mjs';
+import { OWNER, BOT_NAME, IGDB_IDS, isProject, parseTitle, platformOf, statusOf, scanTree, lastHumanCommitDate, listAllPages, parseSupporters } from './lib.mjs';
 import { getToken, findGame, findGameById, coverUrl } from './igdb.mjs';
 
 const API = 'https://api.github.com';
+const KOFI_FEED = 'https://ko-fi.com/Feed/LoadPageFeed?buttonId=Y6T0289KUP';
 
 async function attempt(fn, fallback, label) {
   try {
@@ -114,6 +115,13 @@ export async function main() {
   mkdirSync('site', { recursive: true });
   writeFileSync('site/projects.json', JSON.stringify(out, null, 2));
   console.log(`Wrote ${out.length} projects`);
+  // shortcut: first feed page only (~latest supporters), paginate if the list should go further back
+  const supporters = await attempt(async () => {
+    const res = await fetch(KOFI_FEED);
+    if (!res.ok) throw new Error(res.status);
+    return parseSupporters(await res.text());
+  }, null, 'Ko-fi feed');
+  if (supporters) writeFileSync('site/supporters.json', JSON.stringify(supporters, null, 2)); // keep last good file on failure
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {

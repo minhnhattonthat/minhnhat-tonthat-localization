@@ -88,6 +88,10 @@ img { display: block; }
 
 .bottom { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: center; padding: 24px; background: #1a1a1a; color: var(--muted); text-align: center; }
 .bottom p { margin: 0; }
+.supporters { flex-basis: 100%; }
+.supporters ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; margin: 8px 0 0; padding: 0; list-style: none; }
+.supporters li { display: flex; align-items: center; gap: 6px; color: var(--text); }
+.supporters img { border-radius: 50%; object-fit: cover; }
 .bottom .counter { flex-basis: 100%; font-size: 12px; }
 .bottom .counter img { display: inline-block; vertical-align: middle; }
 .bottom .small { flex-basis: 100%; font-size: 11px; }

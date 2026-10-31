@@ -82,3 +82,15 @@ test('listAllPages follows pages until a short page', async () => {
   assert.equal(all.length, 201);
   assert.equal(seen.length, 3);
 });
+
+test('parseSupporters', async () => {
+  const { parseSupporters } = await import('./lib.mjs');
+  const item = (img, name) => `<div class="row feeditem-unit"><img loading="lazy" src="${img}" class="feeditem-profile-img"><name class="feeditem-poster-name">${name}</name> bought a Mocha</div>`;
+  const html = item('https://storage.ko-fi.com/a.jpeg', 'SilverSoul') + item('https://storage.ko-fi.com/a.jpeg', 'SilverSoul')
+    + item('/img/anon11.png?v=11', 'Tom &amp; Jerry') + '<div class="row feeditem-unit">no name</div>';
+  assert.deepEqual(parseSupporters(html), [
+    { name: 'SilverSoul', avatar: 'https://storage.ko-fi.com/a.jpeg' },
+    { name: 'Tom & Jerry', avatar: 'https://ko-fi.com/img/anon11.png?v=11' },
+  ]);
+  assert.deepEqual(parseSupporters(''), []);
+});

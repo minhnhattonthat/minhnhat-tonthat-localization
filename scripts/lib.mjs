@@ -71,3 +71,19 @@ export async function listAllPages(getJson, url) {
     if (items.length < 100) return all;
   }
 }
+
+const unescapeHtml = (s) => s.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos);/gi, (_, e) =>
+  e[0] === '#' ? String.fromCodePoint(Number(e[1] === 'x' || e[1] === 'X' ? '0' + e.slice(1) : e.slice(1)))
+    : { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" }[e.toLowerCase()]);
+
+// Ko-fi feed HTML → unique supporters, newest first. Each feed item has one avatar img then one <name>.
+export function parseSupporters(html) {
+  const seen = new Map();
+  for (const item of html.split('feeditem-unit').slice(1)) {
+    const name = item.match(/<name[^>]*>([^<]*)<\/name>/)?.[1].trim();
+    const src = item.match(/<img[^>]*src="([^"]+)"[^>]*feeditem-profile-img/)?.[1];
+    if (!name || seen.has(name)) continue;
+    seen.set(name, { name: unescapeHtml(name), avatar: src ? new URL(unescapeHtml(src), 'https://ko-fi.com').href : null });
+  }
+  return [...seen.values()];
+}
